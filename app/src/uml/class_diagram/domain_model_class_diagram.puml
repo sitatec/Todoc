@@ -1,0 +1,17 @@
+@startuml
+
+    skinparam nodesep 150
+
+    class Task {
+        name : String
+        creationTimestamp : Integer
+    }
+
+    class Project {
+        name : String
+        color : Integer
+    }
+
+    Task "1..*" - "1" Project
+
+@enduml

@@ -1,0 +1,21 @@
+@startuml
+
+    skinparam nodesep 150
+    hide circle
+
+    entity task {
+        id : INTEGER NOT NULL  [PK]
+        name : VARCHAR NOT NULL
+        creation_timestamp : INTEGER NOT NULL
+        project_id : INTEGER  [FK]
+    }
+
+    entity project {
+        id : INTEGER  [PK]
+        name : String  VARCHAR NOT NULL
+        color : INTEGER
+    }
+
+    task }|-|| project
+
+@enduml

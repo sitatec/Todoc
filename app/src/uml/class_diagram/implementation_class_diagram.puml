@@ -1,0 +1,75 @@
+@startuml
+
+    left to right direction
+    skinparam ranksep 150
+    skinparam nodesep 100
+    skinparam classAttributeIconSize 0
+
+    package Persistence {
+
+    package Entities{
+       class Task {
+            - id : Long
+            - name : String
+            - creationTimestamp : Long
+
+            + setId(id : Long)
+            + getId() : Long
+            + getName() : String
+            + getCreationTimestamp() : Long
+            + getProjectId() : Long
+        }
+
+       class Project {
+            - id : Long
+            - name : String
+            - color : Integer
+
+            + setId(id : Long)
+            + getId() : Long
+            + getName() : String
+            + getColor() : Integer
+        }
+    }
+
+    package Repositories {
+        class TaskRepository {
+            insert(task : Task)
+            delete(taskId : Integer)
+            getAll() : LiveData<List<Task>>
+        }
+        class ProjectRepository {
+            insert(project : Project)
+            getAll() : LiveData<List<Task>>
+        }
+    }
+
+    package DataAccessObjects {
+        interface TaskDao{
+            insert(task : Task)
+            delete(taskId : Integer)
+            getAll() : LiveData<List<Task>>
+        }
+
+        interface ProjectDao{
+            insert(project : Project)
+            getAll() : LiveData<List<Task>>
+        }
+    }
+
+    abstract class RoomDatabase
+    abstract class Database {
+        + getInstance() : Database
+    }
+
+    Task "*" -- "1" Project
+
+    Database -|> RoomDatabase
+
+    Database "1" -- "1" TaskDao
+    Database "1" -- "1" ProjectDao
+
+    TaskDao "1" -- "1" TaskRepository
+    ProjectDao "1" -- "1" ProjectRepository
+
+@enduml
