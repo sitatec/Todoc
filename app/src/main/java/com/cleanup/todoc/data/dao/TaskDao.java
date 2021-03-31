@@ -1,11 +1,12 @@
-package com.cleanup.todoc.data_persistence.dao;
+package com.cleanup.todoc.data.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.cleanup.todoc.model.Task;
+import com.cleanup.todoc.models.Task;
 
 import java.util.List;
 
@@ -15,21 +16,24 @@ public interface TaskDao {
     public void insert(Task task);
 
     @Query("SELECT * FROM task")
-    LiveData<List<Task>> getAll();
+    public LiveData<List<Task>> getAll();
 
     @Query("SELECT * FROM task " +
             "JOIN project ON project.id = project_id " +
             "ORDER BY project.name ASC")
-    LiveData<List<Task>> getSortedInAscendingOrderOfProject();
+    public LiveData<List<Task>> getSortedInAscendingOrderOfProject();
 
     @Query("SELECT * FROM task " +
             "JOIN project ON project.id = project_id " +
             "ORDER BY project.name DESC")
-    LiveData<List<Task>> getSortedInDescendingOrderOfProject();
+    public LiveData<List<Task>> getSortedInDescendingOrderOfProject();
 
     @Query("SELECT * FROM task ORDER BY creationTimestamp ASC")
-    LiveData<List<Task>> getSortedInAscendingOrderOfDate();
+    public LiveData<List<Task>> getSortedInAscendingOrderOfDate();
 
     @Query("SELECT * FROM task ORDER BY creationTimestamp DESC")
-    LiveData<List<Task>> getSortedInDescendingOrderOfDate();
+    public LiveData<List<Task>> getSortedInDescendingOrderOfDate();
+
+    @Delete
+    public void delete(Task task);
 }

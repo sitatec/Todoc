@@ -1,8 +1,7 @@
-package com.cleanup.todoc.model;
+package com.cleanup.todoc.models;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -17,7 +16,7 @@ public class Project {
      * The unique identifier of the project
      */
     @PrimaryKey(autoGenerate = true)
-    private long id;
+    private Long id;
 
     /**
      * The name of the project
@@ -45,7 +44,7 @@ public class Project {
     /**
      * Used by Room (ID is auto-generated)
      */
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -54,7 +53,7 @@ public class Project {
      *
      * @return the unique identifier of the project
      */
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

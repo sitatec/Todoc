@@ -1,12 +1,12 @@
-package com.cleanup.todoc.data_persistence.repositories;
+package com.cleanup.todoc.data.repositories;
 
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
-import com.cleanup.todoc.data_persistence.Database;
-import com.cleanup.todoc.data_persistence.dao.TaskDao;
-import com.cleanup.todoc.model.Task;
+import com.cleanup.todoc.data.Database;
+import com.cleanup.todoc.data.dao.TaskDao;
+import com.cleanup.todoc.models.Task;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -36,18 +36,25 @@ public class TaskRepository {
         });
     }
 
+    public void delete(Task task){
+        doInBackground.execute(() -> {
+            taskDao.delete(task);
+        });
+    }
+
     public LiveData<List<Task>> getAllTasks(){
         if(allTasks == null) allTasks = taskDao.getAll();
         return allTasks;
     }
 
-    public LiveData<List<Task>> getTasksSortedInAscendingOrderOfProject(){
-        if(tasksSortedInAscendingOrderOfProject == null)
-            tasksSortedInAscendingOrderOfProject = taskDao.getSortedInAscendingOrderOfProject();
+    public LiveData<List<Task>> getTasksInAscendingOrderOfProject(){
+        if (tasksSortedInAscendingOrderOfProject == null) {
+          tasksSortedInAscendingOrderOfProject = taskDao.getSortedInAscendingOrderOfProject();
+        }
         return tasksSortedInAscendingOrderOfProject;
     }
 
-    public LiveData<List<Task>> getTasksSortedInDescendingOrderOfProject(){
+    public LiveData<List<Task>> getTasksInDescendingOrderOfProject(){
         if (tasksSortedInDescendingOrderOfProject == null) {
           tasksSortedInDescendingOrderOfProject = taskDao.getSortedInDescendingOrderOfProject();
         }

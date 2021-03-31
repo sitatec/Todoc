@@ -1,16 +1,17 @@
-package com.cleanup.todoc.data_persistence;
+package com.cleanup.todoc.data;
 
 import android.content.Context;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.cleanup.todoc.data_persistence.dao.ProjectDao;
-import com.cleanup.todoc.data_persistence.dao.TaskDao;
-import com.cleanup.todoc.model.Project;
-import com.cleanup.todoc.model.Task;
+import com.cleanup.todoc.data.dao.ProjectDao;
+import com.cleanup.todoc.data.dao.TaskDao;
+import com.cleanup.todoc.models.Project;
+import com.cleanup.todoc.models.Task;
 
 import java.util.concurrent.Executors;
 
@@ -43,5 +44,10 @@ public abstract class Database extends RoomDatabase {
             });
         }
     };
+
+    @VisibleForTesting
+    public static Database getTestInstance(Context context){
+        return Room.inMemoryDatabaseBuilder(context, Database.class).build();
+    }
 
 }

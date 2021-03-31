@@ -1,11 +1,10 @@
-package com.cleanup.todoc.data_persistence.dao;
+package com.cleanup.todoc.data.dao;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import com.cleanup.todoc.model.Project;
-import com.cleanup.todoc.model.Task;
+import com.cleanup.todoc.models.Project;
 
 import java.util.List;
 

@@ -1,16 +1,17 @@
-package com.cleanup.todoc.data_persistence.repositories;
+package com.cleanup.todoc.data.repositories;
 
 import android.app.Application;
 
-import com.cleanup.todoc.data_persistence.Database;
-import com.cleanup.todoc.data_persistence.dao.ProjectDao;
-import com.cleanup.todoc.model.Project;
+import com.cleanup.todoc.data.Database;
+import com.cleanup.todoc.data.dao.ProjectDao;
+import com.cleanup.todoc.models.Project;
 
 import java.util.List;
 import java.util.concurrent.Executors;
 
 public class ProjectRepository {
     private final ProjectDao projectDao;
+    private List<Project> allProjects;
 
     public ProjectRepository(Application application){
         projectDao = Database.getInstance(application).projectDao();
@@ -22,7 +23,8 @@ public class ProjectRepository {
         });
     }
 
-    public List<Project> getAll(){
-        return projectDao.getAll();
+    public List<Project> getAllProjects(){
+        if(allProjects == null) allProjects = projectDao.getAll();
+        return allProjects;
     }
 }
