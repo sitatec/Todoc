@@ -25,21 +25,17 @@ public class TaskRepository {
     private LiveData<List<Task>> tasksSortedByNewestFirst;
     private LiveData<List<Task>> tasksSortedByOldestFirst;
 
-    public TaskRepository(Application application){
-        taskDao = Database.getInstance(application).taskDao();
-        doInBackground = Executors.newSingleThreadExecutor();
+    public TaskRepository(TaskDao taskDao){
+        this.taskDao = taskDao;
+        doInBackground = Executors.newFixedThreadPool(2);
     }
 
     public void add(Task task){
-        doInBackground.execute(() -> {
-            taskDao.insert(task);
-        });
+        doInBackground.execute(() -> taskDao.insert(task));
     }
 
     public void delete(Task task){
-        doInBackground.execute(() -> {
-            taskDao.delete(task);
-        });
+        doInBackground.execute(() -> taskDao.delete(task));
     }
 
     public LiveData<List<Task>> getAllTasks(){
@@ -63,14 +59,14 @@ public class TaskRepository {
 
     public LiveData<List<Task>> getTasksSortedByNewestFirst() {
         if(tasksSortedByNewestFirst == null) {
-            tasksSortedByNewestFirst = taskDao.getSortedInAscendingOrderOfDate();
+            tasksSortedByNewestFirst = taskDao.getSortedInDescendingOrderOfDate();
         }
         return tasksSortedByNewestFirst;
     }
 
     public LiveData<List<Task>> getTasksSortedByOldestFirst() {
         if(tasksSortedByOldestFirst == null){
-            tasksSortedByOldestFirst = taskDao.getSortedInDescendingOrderOfDate();
+            tasksSortedByOldestFirst = taskDao.getSortedInAscendingOrderOfDate();
         }
         return tasksSortedByOldestFirst;
     }

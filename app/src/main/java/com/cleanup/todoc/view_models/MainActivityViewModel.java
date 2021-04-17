@@ -1,19 +1,19 @@
 package com.cleanup.todoc.view_models;
 
-import android.app.Application;
-
 import androidx.annotation.NonNull;
-import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.cleanup.todoc.data.repositories.ProjectRepository;
 import com.cleanup.todoc.data.repositories.TaskRepository;
 import com.cleanup.todoc.models.Project;
 import com.cleanup.todoc.models.Task;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-public class MainActivityViewModel extends AndroidViewModel {
+public class MainActivityViewModel extends ViewModel {
 
     private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
@@ -24,13 +24,12 @@ public class MainActivityViewModel extends AndroidViewModel {
     private LiveData<List<Task>> tasksSortedByNewestFirst;
     private LiveData<List<Task>> tasksSortedByOldestFirst;
 
-    private List<Project> allProjects;
+    private LiveData<List<Project>> allProjects;
     private LiveData<List<Task>> allTasks;
 
-    public MainActivityViewModel(@NonNull Application application) {
-        super(application);
-        projectRepository = new ProjectRepository(application);
-        taskRepository = new TaskRepository(application);
+    public MainActivityViewModel(ProjectRepository projectRepository, TaskRepository taskRepository) {
+        this.projectRepository = projectRepository;
+        this.taskRepository = taskRepository;
     }
 
     public void addNewTask(Task task){
@@ -41,7 +40,7 @@ public class MainActivityViewModel extends AndroidViewModel {
         taskRepository.delete(task);
     }
 
-    public List<Project> getAllProjects(){
+    public LiveData<List<Project>> getAllProjects(){
         if(allProjects == null) allProjects = projectRepository.getAllProjects();
         return allProjects;
     }
@@ -78,4 +77,25 @@ public class MainActivityViewModel extends AndroidViewModel {
         return tasksSortedByOldestFirst;
     }
 
+    public static class Factory implements ViewModelProvider.Factory {
+
+        private final ProjectRepository projectRepository;
+        private final TaskRepository taskRepository;
+
+        public Factory(ProjectRepository projectRepository, TaskRepository taskRepository){
+            this.taskRepository = taskRepository;
+            this.projectRepository = projectRepository;
+        }
+
+        @NonNull
+        @Override
+        public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+            try {
+                return modelClass.getConstructor(ProjectRepository.class, TaskRepository.class)
+                        .newInstance(projectRepository, taskRepository);
+            } catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
+                throw new RuntimeException("Cannot create an instance of " + modelClass, e);
+            }
+        }
+    }
 }

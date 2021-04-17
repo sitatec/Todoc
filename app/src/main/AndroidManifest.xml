@@ -4,6 +4,7 @@
 
     <!-- Ignore GoogleAppIndexingWarning is safe because we don't want the app to be indexable -->
     <application
+        android:name=".TodocApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

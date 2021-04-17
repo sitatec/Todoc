@@ -18,12 +18,12 @@ public interface TaskDao {
     @Query("SELECT * FROM task")
     public LiveData<List<Task>> getAll();
 
-    @Query("SELECT * FROM task " +
+    @Query("SELECT task.* FROM task " +
             "JOIN project ON project.id = project_id " +
             "ORDER BY project.name ASC")
     public LiveData<List<Task>> getSortedInAscendingOrderOfProject();
 
-    @Query("SELECT * FROM task " +
+    @Query("SELECT task.* FROM task " +
             "JOIN project ON project.id = project_id " +
             "ORDER BY project.name DESC")
     public LiveData<List<Task>> getSortedInDescendingOrderOfProject();

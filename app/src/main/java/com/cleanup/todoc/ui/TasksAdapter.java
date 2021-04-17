@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cleanup.todoc.R;
+import com.cleanup.todoc.data.repositories.ProjectRepository;
 import com.cleanup.todoc.models.Project;
 import com.cleanup.todoc.models.Task;
 
@@ -34,14 +35,17 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
     @NonNull
     private final DeleteTaskListener deleteTaskListener;
 
+    private final ProjectRepository projectRepository;
+
     /**
      * Instantiates a new TasksAdapter.
      *
      * @param tasks the list of tasks the adapter deals with to set
      */
-    TasksAdapter(@NonNull final List<Task> tasks, @NonNull final DeleteTaskListener deleteTaskListener) {
+    TasksAdapter(@NonNull final List<Task> tasks, @NonNull final DeleteTaskListener deleteTaskListener, ProjectRepository projectRepository) {
         this.tasks = tasks;
         this.deleteTaskListener = deleteTaskListener;
+        this.projectRepository = projectRepository;
     }
 
     /**
@@ -150,14 +154,15 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
             lblTaskName.setText(task.getName());
             imgDelete.setTag(task);
 
-            final Project taskProject = task.getProject();
-            if (taskProject != null) {
-                imgProject.setSupportImageTintList(ColorStateList.valueOf(taskProject.getColor()));
-                lblProjectName.setText(taskProject.getName());
-            } else {
-                imgProject.setVisibility(View.INVISIBLE);
-                lblProjectName.setText("");
-            }
+            projectRepository.getById(task.getProjectId(), taskProject ->{
+                if (taskProject != null) {
+                    imgProject.setSupportImageTintList(ColorStateList.valueOf(taskProject.getColor()));
+                    lblProjectName.setText(taskProject.getName());
+                } else {
+                    imgProject.setVisibility(View.INVISIBLE);
+                    lblProjectName.setText("");
+                }
+            });
 
         }
     }

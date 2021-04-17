@@ -40,7 +40,7 @@
         }
         class ProjectRepository {
             insert(project : Project)
-            getAll() : LiveData<List<Task>>
+            getAllProjects() : List<Project>
         }
     }
 
@@ -53,7 +53,7 @@
 
         interface ProjectDao{
             insert(project : Project)
-            getAll() : LiveData<List<Task>>
+            getAll() : List<Project>
         }
     }
 
