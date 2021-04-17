@@ -1,5 +1,7 @@
 @startuml
 
+    title "Domain model"
+
     skinparam nodesep 150
 
     class Task {
@@ -12,6 +14,6 @@
         color : Integer
     }
 
-    Task "1..*" - "1" Project
+    Task "*" - "1" Project
 
 @enduml

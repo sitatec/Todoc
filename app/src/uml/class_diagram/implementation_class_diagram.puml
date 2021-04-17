@@ -1,6 +1,7 @@
 @startuml
 
-    left to right direction
+    title "Implementation Diagram"
+
     skinparam ranksep 150
     skinparam nodesep 100
     skinparam classAttributeIconSize 0
@@ -62,7 +63,7 @@
         + getInstance() : Database
     }
 
-    Task "*" -- "1" Project
+    Task "*" - "1" Project
 
     Database -|> RoomDatabase
 
@@ -71,5 +72,8 @@
 
     TaskDao "1" -- "1" TaskRepository
     ProjectDao "1" -- "1" ProjectRepository
+
+    ProjectRepository "*" o-- "1" Project
+    TaskRepository "*" o-- "1" Task
 
 @enduml

@@ -1,5 +1,7 @@
 @startuml
 
+    title "Database - Entity Relationship"
+
     skinparam nodesep 150
     hide circle
 
@@ -16,6 +18,6 @@
         color : INTEGER
     }
 
-    task }|-|| project
+    task }o-|| project
 
 @enduml
