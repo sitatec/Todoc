@@ -13,7 +13,7 @@
     }
 
     entity project {
-        id : INTEGER  [PK]
+        id : INTEGER NOT NULL [PK]
         name : String  VARCHAR NOT NULL
         color : INTEGER
     }
