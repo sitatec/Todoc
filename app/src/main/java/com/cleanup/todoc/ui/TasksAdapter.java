@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * <p>Adapter which handles the list of tasks to display in the dedicated RecyclerView.</p>
  *
- * @author Gaëtan HERFRAY
+ * taskRepository
  */
 public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHolder> {
     /**
@@ -90,7 +90,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
     /**
      * <p>ViewHolder for task items in the tasks list</p>
      *
-     * @author Gaëtan HERFRAY
+     * taskRepository
      */
     class TaskViewHolder extends RecyclerView.ViewHolder {
         /**
@@ -156,8 +156,10 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.TaskViewHold
 
             projectRepository.getById(task.getProjectId(), taskProject ->{
                 if (taskProject != null) {
-                    imgProject.setSupportImageTintList(ColorStateList.valueOf(taskProject.getColor()));
-                    lblProjectName.setText(taskProject.getName());
+                    imgProject.post(() -> {
+                        imgProject.setSupportImageTintList(ColorStateList.valueOf(taskProject.getColor()));
+                        lblProjectName.setText(taskProject.getName());
+                    });
                 } else {
                     imgProject.setVisibility(View.INVISIBLE);
                     lblProjectName.setText("");

@@ -7,8 +7,6 @@ import androidx.room.PrimaryKey;
 
 /**
  * <p>Models for project in which tasks are included.</p>
- *
- * @author Gaëtan HERFRAY
  */
 @Entity
 public class Project {

@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey;
 /**
  * <p>Model for the tasks of the application.</p>
  *
- * @author Gaëtan HERFRAY
+ * taskRepository
  */
 @Entity(tableName = "task", foreignKeys =
 @ForeignKey(entity = Project.class, childColumns = "project_id", parentColumns = "id"))

@@ -82,8 +82,6 @@ public class MainActivity extends AppCompatActivity {
 
     private MainActivityViewModel viewModel;
 
-    private boolean isTaskListEmpty = true;
-
     private DependencyContainer dependencyContainer;
 
     @Override
@@ -140,14 +138,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         updateTasks();
-
         return super.onOptionsItemSelected(item);
     }
 
     /**
      * Called when the user clicks on the positive button of the Create Task Dialog.
-     *
      * @param dialogInterface the current displayed dialog
+     *
      */
     private void onPositiveButtonClick(DialogInterface dialogInterface) {
         //TODO REFACTOR
@@ -218,13 +215,12 @@ public class MainActivity extends AppCompatActivity {
      */
     private void updateTasks() {
         tasks.observe(this, newTasks -> {
-            isTaskListEmpty = newTasks.isEmpty();
-            updateViewState();
+            updateViewState(newTasks.isEmpty());
             adapter.updateTasks(newTasks);
         });
     }
 
-    private void updateViewState(){
+    private void updateViewState(boolean isTaskListEmpty){
         if (isTaskListEmpty) {
             lblNoTasks.setVisibility(View.VISIBLE);
             listTasks.setVisibility(View.GONE);
