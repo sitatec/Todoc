@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.cleanup.todoc.R;
 import com.cleanup.todoc.data.repositories.ProjectRepository;
-import com.cleanup.todoc.models.Project;
 import com.cleanup.todoc.models.Task;
 
 import java.util.List;

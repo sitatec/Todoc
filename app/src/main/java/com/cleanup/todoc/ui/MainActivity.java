@@ -28,7 +28,6 @@ import com.cleanup.todoc.utils.DependencyContainer;
 import com.cleanup.todoc.view_models.MainActivityViewModel;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -56,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
      * Dialog to create a new task
      */
     @Nullable
-    public AlertDialog dialog;
+    private AlertDialog dialog;
 
     /**
      * EditText that allows user to set the name of a task

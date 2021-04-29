@@ -1,0 +1,18 @@
+@startuml
+
+left to right direction
+skinparam dpi 800
+scale 2
+actor Utilisateur
+
+rectangle "Application Todoc" {
+    Utilisateur -- (Afficher la liste de toutes les tâches)
+    Utilisateur -- (Créer une tâche)
+    Utilisateur -- (Supprimer une tâche)
+    Utilisateur -- (Trier les tâches par nom de projet [A -> Z])
+    Utilisateur -- (Trier les tâches par nom de projet [Z -> A])
+    Utilisateur -- (Trier les tâches par date de création [ordre croissant])
+    Utilisateur -- (Trier les tâches par date de création [ordre décroissant])
+}
+
+@enduml

@@ -27,6 +27,8 @@ public class MainActivityViewModel extends ViewModel {
     private LiveData<List<Project>> allProjects;
     private LiveData<List<Task>> allTasks;
 
+    TasksOrder currentOrder = TasksOrder.NEWEST_FIRST;
+
     public MainActivityViewModel(ProjectRepository projectRepository, TaskRepository taskRepository) {
         this.projectRepository = projectRepository;
         this.taskRepository = taskRepository;
@@ -47,16 +49,29 @@ public class MainActivityViewModel extends ViewModel {
 
     public LiveData<List<Task>> getAllTasks(){
         if(allTasks == null) allTasks = taskRepository.getAllTasks();
-        return allTasks;
+        switch (currentOrder){
+            case NEWEST_FIRST:
+                return getTasksSortedByNewestFirst();
+            case OLDEST_FIRST:
+                return getTasksSortedByOldestFirst();
+            case ALPHABETICAL_ORDER_ASC:
+                return getTasksInAscendingOrderOfProject();
+            case ALPHABETICAL_ORDER_DESC:
+                return getTasksInDescendingOrderOfProject();
+            default:
+                return allTasks;
+        }
     }
 
     public LiveData<List<Task>> getTasksInAscendingOrderOfProject(){
+        currentOrder = TasksOrder.ALPHABETICAL_ORDER_ASC;
         if(tasksSortedInAscendingOrderOfProject == null)
             tasksSortedInAscendingOrderOfProject = taskRepository.getTasksInAscendingOrderOfProject();
         return tasksSortedInAscendingOrderOfProject;
     }
 
     public LiveData<List<Task>> getTasksInDescendingOrderOfProject(){
+        currentOrder = TasksOrder.ALPHABETICAL_ORDER_DESC;
         if (tasksSortedInDescendingOrderOfProject == null) {
             tasksSortedInDescendingOrderOfProject = taskRepository.getTasksInDescendingOrderOfProject();
         }
@@ -64,6 +79,7 @@ public class MainActivityViewModel extends ViewModel {
     }
 
     public LiveData<List<Task>> getTasksSortedByNewestFirst() {
+        currentOrder = TasksOrder.NEWEST_FIRST;
         if(tasksSortedByNewestFirst == null) {
             tasksSortedByNewestFirst = taskRepository.getTasksSortedByNewestFirst();
         }
@@ -71,6 +87,7 @@ public class MainActivityViewModel extends ViewModel {
     }
 
     public LiveData<List<Task>> getTasksSortedByOldestFirst() {
+        currentOrder = TasksOrder.OLDEST_FIRST;
         if(tasksSortedByOldestFirst == null){
             tasksSortedByOldestFirst = taskRepository.getTasksSortedByOldestFirst();
         }
@@ -97,5 +114,12 @@ public class MainActivityViewModel extends ViewModel {
                 throw new RuntimeException("Cannot create an instance of " + modelClass, e);
             }
         }
+    }
+
+    enum TasksOrder {
+        NEWEST_FIRST,
+        OLDEST_FIRST,
+        ALPHABETICAL_ORDER_ASC,
+        ALPHABETICAL_ORDER_DESC
     }
 }

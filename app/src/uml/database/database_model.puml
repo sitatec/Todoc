@@ -9,7 +9,7 @@
         id : INTEGER NOT NULL  [PK]
         name : VARCHAR NOT NULL
         creation_timestamp : INTEGER NOT NULL
-        project_id : INTEGER  [FK]
+        project_id : INTEGER NOT NULL [FK]
     }
 
     entity project {

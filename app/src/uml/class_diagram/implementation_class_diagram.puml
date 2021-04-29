@@ -1,79 +1,238 @@
 @startuml
 
     title "Implementation Diagram"
-
-    skinparam ranksep 150
-    skinparam nodesep 100
     skinparam classAttributeIconSize 0
+    set namespaceSeparator none
+    skinparam dpi 800
 
-    package Persistence {
-
-    package Entities{
-       class Task {
-            - id : Long
-            - name : String
-            - creationTimestamp : Long
-
-            + setId(id : Long)
-            + getId() : Long
-            + getName() : String
-            + getCreationTimestamp() : Long
-            + getProjectId() : Long
-        }
-
-       class Project {
-            - id : Long
-            - name : String
-            - color : Integer
-
-            + setId(id : Long)
-            + getId() : Long
-            + getName() : String
-            + getColor() : Integer
-        }
+   package androidx.appcompat.app <<external>> {
+        class AppCompatActivity
+   }
+    package androidx.recyclerview.widget <<external>> {
+        class RecyclerView.ViewHolder
     }
 
-    package Repositories {
-        class TaskRepository {
-            insert(task : Task)
-            delete(taskId : Integer)
-            getAll() : LiveData<List<Task>>
-        }
-        class ProjectRepository {
-            insert(project : Project)
-            getAllProjects() : List<Project>
-        }
+    package androidx.lifecycle <<external>> {
+        class ViewModel
+        class ViewModelProvider.Factory
     }
 
-    package DataAccessObjects {
-        interface TaskDao{
-            insert(task : Task)
-            delete(taskId : Integer)
-            getAll() : LiveData<List<Task>>
-        }
-
-        interface ProjectDao{
-            insert(project : Project)
-            getAll() : List<Project>
-        }
+    package androidx.room <<external>> {
+        abstract class RoomDatabase
     }
 
-    abstract class RoomDatabase
-    abstract class Database {
-        + getInstance() : Database
+
+    package com.cleanup.todoc {
+
+        package data {
+
+            package entities{
+               class Task {
+                    - id : Long
+                    - name : String
+                    - creationTimestamp : Long
+
+                    + setId(id : Long)
+                    + getId() : Long
+                    + getName() : String
+                    + getCreationTimestamp() : Long
+                    + getProjectId() : Long
+                }
+
+               class Project {
+                    - id : Long
+                    - name : String
+                    - color : Integer
+
+                    + setId(id : Long)
+                    + getId() : Long
+                    + getName() : String
+                    + getColor() : Integer
+                }
+            }
+
+            package repositories {
+                class TaskRepository {
+                    - doInBackground : Executor
+                    - allTasks : LiveData<List<Task>>
+                    - tasksSortedInAscendingOrderOfProject : LiveData<List<Task>>
+                    - tasksSortedInDescendingOrderOfProject : LiveData<List<Task>>
+                    - tasksSortedByNewestFirst : LiveData<List<Task>>
+                    - tasksSortedByOldestFirst : LiveData<List<Task>>
+
+                    + insert(task : Task)
+                    + delete(taskId : Integer)
+                    + getAll() : LiveData<List<Task>>
+                    + getTasksInAscendingOrderOfProject() : LiveData<List<Task>>
+                    + getTasksInDescendingOrderOfProject() : LiveData<List<Task>>
+                    + getTasksSortedByNewestFirst() : LiveData<List<Task>>
+                    + getTasksSortedByOldestFirst() : LiveData<List<Task>>
+                }
+                class ProjectRepository {
+                    - allProjects : LiveData<List<Task>>
+                    - doInBackground : Executor
+                    + insert(project : Project)
+                    + getAllProjects() : List<Project>
+                    + getById(id : Long, listener : GetProjectListener)
+                }
+
+                interface GetProjectListener {
+                    ~ onGet(project : Project);
+                }
+
+                ProjectRepository +- GetProjectListener
+            }
+
+            package dao {
+                interface TaskDao {
+                    + insert(task : Task)
+                    + delete(taskId : Integer)
+                    + getAll() : LiveData<List<Task>>
+                    + getSortedInAscendingOrderOfProject() : LiveData<List<Task>>
+                    + getSortedInDescendingOrderOfProject() : LiveData<List<Task>>
+                    + getSortedInAscendingOrderOfDate() : LiveData<List<Task>>
+                    + getSortedInDescendingOrderOfDate() : LiveData<List<Task>>
+                }
+
+                interface ProjectDao {
+                    + insert(project : Project)
+                    + getAll() : List<Project>
+                    + getByName(name : String)
+                    + getById(id : Long)
+                }
+            }
+
+            abstract class Database {
+                - prepopulate : Callback
+                + getInstance() : Database
+            }
+       }
+
+
+        package view_models {
+            class MainActivityViewModel {
+                - tasksSortedInAscendingOrderOfProject : LiveData<List<Task>>
+                - tasksSortedInDescendingOrderOfProject : LiveData<List<Task>>
+                - tasksSortedByNewestFirst : LiveData<List<Task>>
+                - tasksSortedByOldestFirst : LiveData<List<Task>>
+                - allProjects : LiveData<List<Project>>
+                - allTasks : LiveData<List<Task>>
+                - currentOrder : TasksOrder
+
+                + addNewTask(task : Task)
+                + deleteTask(task : Task)
+                + getTasksSortedInAscendingOrderOfProject() : LiveData<List<Task>>
+                + getTasksSortedInDescendingOrderOfProject() : LiveData<List<Task>>
+                + getTasksSortedByNewestFirst() : LiveData<List<Task>>
+                + getTasksSortedByOldestFirst() : LiveData<List<Task>>
+                + getAllProjects() : LiveData<List<Project>>
+                + getAllTasks() : LiveData<List<Task>>
+            }
+
+            class Factory {
+                - projectRepository : ProjectRepository
+                - taskRepository : TaskRepository
+                + create() : ViewModel
+            }
+
+            enum TasksOrder {
+                NEWEST_FIRST
+                OLDEST_FIRST
+                ALPHABETICAL_ORDER_ASC
+                ALPHABETICAL_ORDER_DESC
+            }
+
+            MainActivityViewModel +-- Factory
+            ViewModelProvider.Factory <|- Factory
+            TasksOrder -+ MainActivityViewModel
+            ViewModel <|- MainActivityViewModel
+        }
+
+
+        package ui {
+            class MainActivity {
+                - allProjects : List<Project>
+                - tasks : LiveData<List<Task>>
+                - dialog : AlertDialog
+                - dialogEditText : EditText
+                - dialogSpinner : Spinner
+                - listTasks : RecyclerView
+                - lblNoTasks : TextView
+
+                + onCreate()
+                - setUpViewModel()
+                - setUpViews()
+                - setUpTasksRecyclerView()
+                + onCreateOptionsMenu() : boolean
+                + onOptionsItemSelected() : boolean
+                - onPositiveButtonClick()
+                - showAddTaskDialog() : AlertDialog
+                - addTask()
+                - updateTasks()
+                - updateViewState()
+                - getAddTaskDialog()
+                - populateDialogSpinner()
+            }
+
+            class TaskAdapter {
+                - tasks : List<Task>
+                - deleteTaskListener
+                - projectRepository
+
+                ~ updateTasks(tasks : List<Task>)
+                + onCreateViewHolder(viewGroup : ViewGroup, viewType : int) TaskViewHolder
+                + onBindViewHolder(taskViewHolder : TaskViewHolder, position : int)
+                + getItemCount() : int
+            }
+
+            interface DeleteTaskListener {
+                ~ onDeleteTask(task : Task)
+            }
+
+           class TaskViewHolder {
+                - imgProject : AppCompatImageView
+                - lblTaskName : TextView
+                - lblProjectName : TextView
+                - imgDelete : AppCompatImageView
+                - deleteTaskListener : DeleteTaskListener
+                ~ bind(task : Task)
+           }
+
+            RecyclerView.ViewHolder <|--- TaskViewHolder
+            DeleteTaskListener -+ TaskAdapter
+            TaskViewHolder --+ TaskAdapter
+        }
+
+        package utils {
+            class DependencyContainer {
+                + taskRepository : TaskRepository
+                + projectRepository : ProjectRepository
+            }
+        }
+
     }
 
     Task "*" - "1" Project
 
-    Database -|> RoomDatabase
+    RoomDatabase <|--- Database
 
-    Database "1" -- "1" TaskDao
-    Database "1" -- "1" ProjectDao
+    Database -- TaskDao
+    Database -- ProjectDao
 
     TaskDao "1" -- "1" TaskRepository
     ProjectDao "1" -- "1" ProjectRepository
 
     ProjectRepository "*" o-- "1" Project
     TaskRepository "*" o-- "1" Task
+
+    ProjectRepository "1" - "1" MainActivityViewModel
+    TaskRepository "1" - "1" MainActivityViewModel
+
+    MainActivity "1" -- "1" MainActivityViewModel
+    TaskAdapter "1" - "1" MainActivity
+    DependencyContainer "1" --- "1" MainActivity
+    AppCompatActivity <|- MainActivity
+
+    AppCompatActivity -[hidden]- ViewModelProvider.Factory
 
 @enduml
