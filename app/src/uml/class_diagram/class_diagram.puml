@@ -3,7 +3,7 @@
     title "Implementation Diagram"
     skinparam classAttributeIconSize 0
     set namespaceSeparator none
-'    skinparam dpi 800
+    skinparam dpi 800
 
    package androidx.appcompat.app <<external>> {
         class AppCompatActivity

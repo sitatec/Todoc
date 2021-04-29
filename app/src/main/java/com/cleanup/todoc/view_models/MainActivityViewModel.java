@@ -48,7 +48,6 @@ public class MainActivityViewModel extends ViewModel {
     }
 
     public LiveData<List<Task>> getAllTasks(){
-        if(allTasks == null) allTasks = taskRepository.getAllTasks();
         switch (currentOrder){
             case NEWEST_FIRST:
                 return getTasksSortedByNewestFirst();
@@ -59,6 +58,7 @@ public class MainActivityViewModel extends ViewModel {
             case ALPHABETICAL_ORDER_DESC:
                 return getTasksInDescendingOrderOfProject();
             default:
+                if(allTasks == null) allTasks = taskRepository.getAllTasks();
                 return allTasks;
         }
     }
